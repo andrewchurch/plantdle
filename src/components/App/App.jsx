@@ -13,12 +13,14 @@ function App() {
     const [view, setView] = useState('game');
 
     return (
-        <div className="mx-auto max-w-5xl">
-            <Header view={view} onChangeView={setView} />
-            <div className="p-2 bg-white text-slate-700">
-                {mainViewComponents[view]}
+        <div className="md:p-4">
+            <div className="mx-auto max-w-5xl">
+                <Header view={view} onChangeView={setView} />
+                <div className="p-2 bg-white text-slate-700">
+                    {mainViewComponents[view]}
+                </div>
+                <Footer />
             </div>
-            <Footer />
         </div>
     )
 }
