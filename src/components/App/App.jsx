@@ -4,16 +4,16 @@ import Game from '../Game/Game.jsx';
 import Stats from '../Stats/Stats.jsx';
 import Footer from '../Footer/Footer.jsx';
 
-const mainViewComponents = {
-    'game': <Game />,
-    'stats': <Stats />
-};
-
 function App() {
     const [view, setView] = useState('game');
 
+    const mainViewComponents = {
+        'game': <Game onChangeView={setView} />,
+        'stats': <Stats />
+    };
+
     return (
-        <div className="md:p-4">
+        <div className="px-2 md:p-4">
             <div className="mx-auto max-w-5xl">
                 <Header view={view} onChangeView={setView} />
                 <div className="p-2 bg-white text-slate-700">

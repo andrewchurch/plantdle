@@ -6,7 +6,7 @@ function Tab({ tabProps, currentView, onChangeView }) {
         <li className="">
             <button className={`p-2 ${activeClasses}`} onClick={() => onChangeView(tabProps.view)}>
                 {tabProps.icon}
-                <span class="sr-only">{tabProps.name}</span>
+                <span className="sr-only">{tabProps.name}</span>
             </button>
         </li>
     )
