@@ -24,8 +24,8 @@ function Game({ onChangeView }) {
     };
     const [game, setGame] = useState(JSON.parse(localStorage.getItem('game')) || defaultGameState);
     
-    const checkGuess = (guess) => {
-        return false;
+    const checkGuess = (guessId) => {
+        return guessId === gameInfo.answerId;
     }
 
     const setActiveClue = (clue) => {
@@ -45,7 +45,7 @@ function Game({ onChangeView }) {
                 guesses: [...currentGameState.guesses]
             };
     
-            const isCorrectGuess = checkGuess(guessLabel);
+            const isCorrectGuess = checkGuess(guessId);
     
             updatedGameState.guesses.unshift({
                 guess: guessLabel,
@@ -78,7 +78,7 @@ function Game({ onChangeView }) {
         
         setGameInfo({
             gameId: 1,
-            answer: 1,
+            answerId: 1,
             visuals: [
                 {
                     'src': 'https://upload.wikimedia.org/wikipedia/commons/6/6a/Agave_potatorum_1zz.jpg',
