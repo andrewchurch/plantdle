@@ -37,7 +37,7 @@ function Game({ onChangeView }) {
         });
     }
 
-    const handleGuess = (guess) => {
+    const handleGuess = (guessId, guessLabel) => {
 
         setGame(currentGameState => {
             let updatedGameState = {
@@ -45,10 +45,10 @@ function Game({ onChangeView }) {
                 guesses: [...currentGameState.guesses]
             };
     
-            const isCorrectGuess = checkGuess(guess);
+            const isCorrectGuess = checkGuess(guessLabel);
     
             updatedGameState.guesses.unshift({
-                guess: guess,
+                guess: guessLabel,
                 outcome: isCorrectGuess ? 'success' : 'failure'
             });
             
