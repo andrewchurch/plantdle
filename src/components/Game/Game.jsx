@@ -4,17 +4,11 @@ import Clues from './Clues/Clues.jsx';
 import Guesser from './Guesser/Guesser.jsx';
 import Guess from './Guess/Guess.jsx';
 
-function Game({ onChangeView }) {
+function Game({ onChangeView, onGameOver }) {
     const totalGuessesAllowed = 4;
 
     const [isLoading, setLoading] = useState(false);
     const [gameInfo, setGameInfo] = useState({});
-
-    const defaultPlayerState = {
-        wins: 0,
-        streak: 0
-    };
-    const [player, setPlayer] = useState(JSON.parse(localStorage.getItem('player')) || defaultPlayerState);
 
     const defaultGameState = {
         status: null,
@@ -55,6 +49,9 @@ function Game({ onChangeView }) {
             if (isCorrectGuess) {
                 updatedGameState.status = 'finished';
                 updatedGameState.outcome = 'success';
+
+                // update player stats
+                onGameOver('success');
             
             } else {
 
@@ -63,6 +60,9 @@ function Game({ onChangeView }) {
                     updatedGameState.status = 'finished';
                     updatedGameState.outcome = 'failure';
                 
+                    // update player stats
+                    onGameOver('failure');
+
                 // not the last guess change active clue
                 } else {
                     updatedGameState.activeClue = currentGameState.guesses.length + 1;
@@ -109,10 +109,6 @@ function Game({ onChangeView }) {
         localStorage.setItem('game', JSON.stringify(game));
     }, [game]);
 
-    useEffect(() => {
-        localStorage.setItem('player', JSON.stringify(player));
-    }, [player]);
-
     return (
         <>
             {gameInfo.visuals && <Clues game={game} gameInfo={gameInfo} onClueChange={setActiveClue} />}
@@ -135,7 +131,7 @@ function Game({ onChangeView }) {
                     </div>
                 </div>
             }
-            <button className="absolute bottom-0 right-0 text-xs text-white bg-black p-4" onClick={() => setGame(defaultGameState)}>Reset</button>
+            <button className="absolute bottom-0 right-0 text-xs text-white bg-black p-4" onClick={() => setGame(defaultGameState)}>Reset Game</button>
         </>
     )
 }

@@ -1,9 +1,10 @@
 
-function Stats() {
+function Stats({ player }) {
 
     return (
         <>
-            [Stats]
+            <p>Wins: {player.wins}</p>
+            <p>Streak: {player.streak}</p>
         </>
     )
 }
