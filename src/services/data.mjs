@@ -17,8 +17,8 @@ const getAll = async () => {
     });
 };
 
-const getGameData = () => {
-
+const getGameInfo = () => {
+    return getClient().getEntry('7tsKlPxeophA3zIii7dLmo');
 };
 
-export { getAll, getGameData };
+export { getAll, getGameInfo };

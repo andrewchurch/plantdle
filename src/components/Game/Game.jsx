@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { getAll, getGameData } from '../../services/data.mjs';
+import { getGameInfo } from '../../services/data.mjs';
 import Clues from './Clues/Clues.jsx';
 import Guesser from './Guesser/Guesser.jsx';
 import Guess from './Guess/Guess.jsx';
+import { documentToHtmlString } from '@contentful/rich-text-html-renderer';
 
 function Game({ onChangeView, onGameOver }) {
     const totalGuessesAllowed = 4;
@@ -63,7 +64,7 @@ function Game({ onChangeView, onGameOver }) {
                     // update player stats
                     onGameOver('failure');
 
-                    // not the last guess change active clue
+                // not the last guess change active clue
                 } else {
                     updatedGameState.activeClue = currentGameState.guesses.length + 1;
                 }
@@ -75,29 +76,21 @@ function Game({ onChangeView, onGameOver }) {
 
     const fetchData = async () => {
         setLoading(true);
-
-        setGameInfo({
-            gameId: 1,
-            answerId: 1,
-            visuals: [
-                {
-                    'src': 'https://upload.wikimedia.org/wikipedia/commons/6/6a/Agave_potatorum_1zz.jpg',
-                    'caption': 'Test Caption'
-                },
-                {
-                    'src': 'https://upload.wikimedia.org/wikipedia/commons/6/6a/Agave_potatorum_1zz.jpg',
-                    'caption': 'Test Caption 2'
-                },
-                {
-                    'src': 'https://upload.wikimedia.org/wikipedia/commons/6/6a/Agave_potatorum_1zz.jpg',
-                    'caption': 'Test Caption 3'
-                },
-            ],
-            hint: 'Test hint',
-            dykfact: 'The name mezcal comes from the Nahuatl (or Aztec) word “mexcalli” meaning an oven-cooked agave.',
-            dyksrc: 'https://www.google.com'
-        });
-
+        getGameInfo().then((response => {
+            const data = response.fields;
+            setGameInfo({
+                plantId: data.id,
+                photos: data.photos.map(photo => {
+                    return {
+                        src: photo.fields.file.url,
+                        caption: photo.fields.title
+                    }
+                }),
+                hint: documentToHtmlString(data.hint),
+                dykfact: documentToHtmlString(data.didYouKnow),
+                dyksrc: data.didYouKnowSrc
+            });
+        }));
         setLoading(false);
     }
 
@@ -111,8 +104,11 @@ function Game({ onChangeView, onGameOver }) {
 
     return (
         <>
-            {gameInfo.visuals && <Clues game={game} gameInfo={gameInfo} onClueChange={setActiveClue} />}
+            {gameInfo.photos && <Clues game={game} gameInfo={gameInfo} onClueChange={setActiveClue} />}
             <div className="p-2">
+                {isLoading && 
+                    <p className="">Loading...</p>
+                }
                 {game.status === 'finished' &&
                     <div className="flex gap-2 justify-center mt-2 mb-4">
                         <h2 className="text-xl tracking-tight font-extrabold text-slate-900">
@@ -158,13 +154,13 @@ function Game({ onChangeView, onGameOver }) {
                 }
                 {game.status === 'finished' && gameInfo.dykfact &&
                     <div className="mt-6 text-xs text-center">
-                        <h3 className="tracking-tight font-extrabold text-slate-900">Did You Know</h3>
-                        <div>
-                            <p>
-                                {gameInfo.dykfact}&nbsp;<a href={gameInfo.dyksrc} className="text-forest-800 after:content-['_↗']">src</a>
-                            </p>
-                            <p></p>
+                        <div className="flex justify-center gap-1">
+                            <h3 className="tracking-tight font-extrabold text-slate-900">
+                                Did You Know
+                            </h3>
+                            <p>(<a href={gameInfo.dyksrc} className="text-forest-800 after:content-['_↗']">src</a>)</p>
                         </div>
+                        <div dangerouslySetInnerHTML={{__html: gameInfo.dykfact}}></div>
                     </div>
                 }
             </div>
