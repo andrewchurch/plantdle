@@ -43,7 +43,7 @@ function App() {
 
     const mainViewComponents = {
         'game': <Game onChangeView={setView} onGameOver={handleGameOver} />,
-        'stats': <Stats player={player} />
+        'stats': <Stats onChangeView={setView} player={player} />
     };
 
     useEffect(() => {
@@ -51,14 +51,12 @@ function App() {
     }, [player]);
 
     return (
-        <div className="px-2 md:p-4">
-            <div className="mx-auto max-w-5xl">
-                <Header view={view} onChangeView={setView} />
-                <div className="p-2 bg-white text-slate-700">
-                    {mainViewComponents[view]}
-                </div>
-                <Footer />
+        <div className="h-screen px-2 md:p-4 mx-auto max-w-5xl grid grid-rows-[min-content,auto,min-content]">
+            <Header view={view} onChangeView={setView} />
+            <div className="bg-white text-slate-700">
+                {mainViewComponents[view]}
             </div>
+            <Footer />
         </div>
     )
 }

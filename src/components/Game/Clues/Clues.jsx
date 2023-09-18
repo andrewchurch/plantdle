@@ -1,5 +1,5 @@
 function ClueChanger({ thisClue, activeClue, onClueChange }) {
-    const classes = thisClue === activeClue ? 'bg-gray-800 text-white' : 'bg-gray-300';
+    const classes = thisClue === activeClue ? 'bg-gray-200' : 'bg-forest-800 text-white';
 
     return (
         <button
@@ -26,15 +26,17 @@ function Clues({ game, gameInfo, onClueChange }) {
             <div className="aspect-video relative">
                 <div className="">
                     <img className="aspect-video absolute top-0 left-0" src={activeVisual.src} />
-                    <p className="absolute top-full right-0 text-xs">{activeVisual.caption}</p>
+                    <p className="absolute top-full right-0 pt-1 px-2 text-xs text-slate-500">{activeVisual.caption}</p>
                 </div>
+                {(game.status === 'finished' || isHintActive) && 
+                    <p className="absolute bottom-0 bg-gray-200 w-full text-xs px-2 py-1">
+                        <span className="font-semibold">Hint:</span>&nbsp;{gameInfo.hint}
+                    </p>
+                }
             </div>
-            <div className="">
+            <div className="flex pl-2 gap-2 border-t-2">
                 {clueChangers}
             </div>
-            {(game.status === 'finished' || isHintActive) && 
-                <p>{gameInfo.hint}</p>
-            }
         </div>
     )
 }

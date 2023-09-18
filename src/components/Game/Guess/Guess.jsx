@@ -1,15 +1,13 @@
-import { useRef, useEffect } from 'react';
-
 function Guess({ guessData }) {
 
-    const indicatorClass = guessData.outcome === 'success' ? 'bg-green-500' : 'bg-red-500';
+    const indicatorClass = guessData.outcome === 'success' ? 'bg-green-600' : 'bg-red-600';
 
     return (
-        <div className="flex">
+        <div className="flex gap-2 bg-gray-200 p-2 mt-1 items-center first:mt-2">
             <span className={`${indicatorClass} w-5 h-5`}>
                 <span className="sr-only">{guessData.outcome}</span>
             </span>
-            <span className="">{guessData.guess}</span>
+            <span className="text-xs">{guessData.guess}</span>
         </div>
     );
 }

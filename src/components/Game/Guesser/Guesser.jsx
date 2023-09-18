@@ -1,25 +1,25 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import AsyncSelect from 'react-select/async';
 
 const loadOptions = (inputValue, callback) => {
 
     setTimeout(() => {
         const options = [
-            { 
+            {
                 id: 1,
-                commonName: 'Areca Palm', 
-                scientificName: 'Dypsis lutescens', 
+                commonName: 'Areca Palm',
+                scientificName: 'Dypsis lutescens',
                 aliases: [
                     'Golden Cane Palm',
-                    'Yellow Palm', 
-                    'Butterfly Palm', 
+                    'Yellow Palm',
+                    'Butterfly Palm',
                     'Bamboo Palm',
                 ]
             },
-            { 
+            {
                 id: 2,
-                commonName: 'Burro\'s Tail', 
-                scientificName: 'Sedum morganianum', 
+                commonName: 'Burro\'s Tail',
+                scientificName: 'Sedum morganianum',
                 aliases: [
                     'Donkey\'s Tail',
                     'Stonecrop',
@@ -32,12 +32,15 @@ const loadOptions = (inputValue, callback) => {
 
 function Guesser({ onGuess }) {
     const [selectedGuess, setSelectedGuess] = useState(null);
+    const inputRef = useRef();
 
     const handleGuessSubmission = (event) => {
         event.preventDefault();
 
+        inputRef.current.clearValue();
+        
         if (!selectedGuess) {
-            
+
             // set error? or allow blank guesses
             return;
         }
@@ -55,9 +58,10 @@ function Guesser({ onGuess }) {
     };
 
     return (
-        <form onSubmit={handleGuessSubmission}>
+        <form onSubmit={handleGuessSubmission} className="flex gap-2 mt-2">
             <AsyncSelect
                 cacheOptions
+                components={{ LoadingIndicator: null }}
                 defaultOptions
                 filterOption={customFilter}
                 getOptionLabel={option => `${option.commonName} (${option.scientificName})`}
@@ -65,10 +69,12 @@ function Guesser({ onGuess }) {
                 isClearable={true}
                 loadOptions={loadOptions}
                 onChange={setSelectedGuess}
-                placeholder="Type to search or select from list"
+                placeholder="Search and select from list"
+                ref={inputRef}
                 required
+                className="text-base w-full"
             />
-            <button className="bg-forest-500">Submit</button>
+            <button className="bg-forest-800 shadow-sm rounded-md px-2 font-semibold text-white tracking-tight text-sm">Submit</button>
         </form>
     );
 }
