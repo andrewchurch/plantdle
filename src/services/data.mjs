@@ -17,8 +17,12 @@ const getAll = async () => {
     });
 };
 
-const getGameInfo = () => {
-    return getClient().getEntry('7tsKlPxeophA3zIii7dLmo');
+const getGameInfo = (gameId) => {
+    return getClient().getEntries({
+        content_type: 'plant',
+        'fields.id': gameId,
+        limit: 1
+    });
 };
 
 export { getAll, getGameInfo };

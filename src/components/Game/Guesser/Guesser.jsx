@@ -8,7 +8,6 @@ function Guesser({ gameId, onGuess }) {
     const inputRef = useRef();
 
     const loadOptions = (input, callback) => {
-        
         if (allOptions.length) {
             callback(allOptions);
         } else {

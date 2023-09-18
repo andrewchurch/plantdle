@@ -5,7 +5,7 @@ import Guesser from './Guesser/Guesser.jsx';
 import Guess from './Guess/Guess.jsx';
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer';
 
-function Game({ onChangeView, onGameOver }) {
+function Game({ gameId, onChangeView, onGameOver }) {
     const totalGuessesAllowed = 4;
 
     const [isLoading, setLoading] = useState(false);
@@ -20,7 +20,7 @@ function Game({ onChangeView, onGameOver }) {
     const [game, setGame] = useState(JSON.parse(localStorage.getItem('game')) || defaultGameState);
 
     const checkGuess = (guessId) => {
-        return guessId === gameInfo.answerId;
+        return guessId === gameInfo.plantId;
     }
 
     const setActiveClue = (clue) => {
@@ -74,13 +74,13 @@ function Game({ onChangeView, onGameOver }) {
         });
     };
 
-    const fetchData = async () => {
+    const fetchGameInfo = async () => {
         setLoading(true);
-        getGameInfo().then((response => {
-            const data = response.fields;
+        getGameInfo(gameId).then((response => {
+            const data = response.items[0].fields;
             setGameInfo({
                 plantId: data.id,
-                photos: data.photos.map(photo => {
+                photos: data.photos && data.photos.map(photo => {
                     return {
                         src: photo.fields.file.url,
                         caption: photo.fields.title
@@ -95,7 +95,7 @@ function Game({ onChangeView, onGameOver }) {
     }
 
     useEffect(() => {
-        fetchData();
+        fetchGameInfo();
     }, []);
 
     useEffect(() => {

@@ -41,14 +41,19 @@ function App() {
         });
     };
 
-    const mainViewComponents = {
-        'game': <Game onChangeView={setView} onGameOver={handleGameOver} />,
-        'stats': <Stats onChangeView={setView} player={player} />
+    const getGameId = () => {
+        const msFromStartDay = Date.now() - new Date(2023, 8, 16);
+        return Math.floor(msFromStartDay / (24 * 60 * 60 * 1000));
     };
 
     useEffect(() => {
         localStorage.setItem('player', JSON.stringify(player));
     }, [player]);
+
+    const mainViewComponents = {
+        'game': <Game gameId={getGameId()} onChangeView={setView} onGameOver={handleGameOver} />,
+        'stats': <Stats onChangeView={setView} player={player} />
+    };
 
     return (
         <div className="h-screen px-2 md:p-4 mx-auto max-w-5xl grid grid-rows-[min-content,auto,min-content]">
@@ -56,7 +61,7 @@ function App() {
             <div className="bg-white text-slate-700">
                 {mainViewComponents[view]}
             </div>
-            <Footer />
+            <Footer gameId={getGameId()} />
         </div>
     )
 }
