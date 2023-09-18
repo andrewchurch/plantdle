@@ -1,60 +1,50 @@
 import { useState, useRef } from 'react';
 import AsyncSelect from 'react-select/async';
+import { getAll } from '../../../services/data.mjs';
 
-const loadOptions = (inputValue, callback) => {
-
-    setTimeout(() => {
-        const options = [
-            {
-                id: 1,
-                commonName: 'Areca Palm',
-                scientificName: 'Dypsis lutescens',
-                aliases: [
-                    'Golden Cane Palm',
-                    'Yellow Palm',
-                    'Butterfly Palm',
-                    'Bamboo Palm',
-                ]
-            },
-            {
-                id: 2,
-                commonName: 'Burro\'s Tail',
-                scientificName: 'Sedum morganianum',
-                aliases: [
-                    'Donkey\'s Tail',
-                    'Stonecrop',
-                ]
-            },
-        ];
-        callback(options);
-    }, 500);
-};
-
-function Guesser({ onGuess }) {
+function Guesser({ gameId, onGuess }) {
     const [selectedGuess, setSelectedGuess] = useState(null);
+    const [allOptions, setAllOptions] = useState([]);
     const inputRef = useRef();
 
-    const handleGuessSubmission = (event) => {
-        event.preventDefault();
-
-        inputRef.current.clearValue();
+    const loadOptions = (input, callback) => {
         
-        if (!selectedGuess) {
-
-            // set error? or allow blank guesses
-            return;
+        if (allOptions.length) {
+            callback(allOptions);
+        } else {
+            getAll().then((response => {
+                let options = [];
+                response.items.forEach(item => {
+                    options.push({ ...item.fields });
+                });
+                callback(options);
+                setAllOptions(options);
+            }));
         }
+    };
 
-        onGuess(selectedGuess.id, `${selectedGuess.commonName} (${selectedGuess.scientificName})`);
+    const getNameOutput = (option) => {
+        return `${option.commonName} (${option.scientificNames.join(', ')})`;
     };
 
     // custom filter to return options that match both the option label (common + scientific name) AND any aliases
     const customFilter = (option, searchText) => {
         if (searchText) {
-            const searchIn = [option.label.toLowerCase(), ...option.data.aliases.map(alias => alias.toLowerCase())];
+            const searchIn = [option.label.toLowerCase()];
+            if (option.data.commonAliases) {
+                searchIn.push(
+                    ...option.data.commonAliases.map(alias => alias.toLowerCase())
+                );
+            }
             return searchIn.some(searchItem => searchItem.includes(searchText.toLowerCase()));
         }
         return true;
+    };
+
+    const handleGuessSubmission = (event) => {
+        event.preventDefault();
+        inputRef.current.clearValue();
+        onGuess(selectedGuess.id, getNameOutput(selectedGuess));
     };
 
     return (
@@ -64,7 +54,7 @@ function Guesser({ onGuess }) {
                 components={{ LoadingIndicator: null }}
                 defaultOptions
                 filterOption={customFilter}
-                getOptionLabel={option => `${option.commonName} (${option.scientificName})`}
+                getOptionLabel={getNameOutput}
                 getOptionValue={option => option.id}
                 isClearable={true}
                 loadOptions={loadOptions}

@@ -143,7 +143,7 @@ function Game({ onChangeView, onGameOver }) {
                         </button>
                     </div>
                 }
-                {game.status !== 'finished' && <Guesser onGuess={handleGuess} />}
+                {game.status !== 'finished' && <Guesser gameId={1} onGuess={handleGuess} />}
                 {game.guesses &&
                     <div>
                         {game.guesses.map((guess, i) => <Guess key={i} guessData={guess} />)}
