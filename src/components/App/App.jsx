@@ -16,15 +16,13 @@ function App() {
 
     const handleGameOver = (outcome) => {
         setPlayer(currentPlayerState => {
-            const wins = outcome === 'success' ? currentPlayerState.wins + 1 : currentPlayerState.wins;
-            
+            let wins = currentPlayerState.wins;
             let streak = 0;
             let winDate = null;
             if (outcome === 'success') {
-
+                wins++;
                 const date = new Date();
                 winDate = `${date.getMonth() + 1}/${date.getDate()}`;
-
                 if (currentPlayerState.lastWin) {
                     date.setDate(date.getDate() - 1);
                     if (currentPlayerState.lastWin === `${date.getMonth() + 1}/${date.getDate()}`) {
@@ -32,7 +30,6 @@ function App() {
                     }
                 }
             }
-
             return {
                 lastWin: winDate,
                 wins: wins,
@@ -42,7 +39,7 @@ function App() {
     };
 
     const getGameId = () => {
-        const msFromStartDay = Date.now() - new Date(2023, 8, 16);
+        const msFromStartDay = Date.now() - new Date(2023, 8, 17);
         return Math.floor(msFromStartDay / (24 * 60 * 60 * 1000));
     };
 

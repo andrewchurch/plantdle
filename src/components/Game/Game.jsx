@@ -12,15 +12,15 @@ function Game({ gameId, onChangeView, onGameOver }) {
     const [gameInfo, setGameInfo] = useState({});
 
     const defaultGameState = {
-        status: null,
-        outcome: null,
         activeClue: 0,
-        guesses: []
+        gameId: gameId,
+        guesses: [],
+        outcome: null,
+        status: null
     };
     const [game, setGame] = useState(JSON.parse(localStorage.getItem('game')) || defaultGameState);
-
-    const checkGuess = (guessId) => {
-        return guessId === gameInfo.plantId;
+    if (game.gameId !== gameId) {
+        setGame(defaultGameState);
     }
 
     const setActiveClue = (clue) => {
@@ -32,8 +32,11 @@ function Game({ gameId, onChangeView, onGameOver }) {
         });
     }
 
-    const handleGuess = (guessId, guessLabel) => {
+    const checkGuess = (guessId) => {
+        return guessId === gameInfo.plantId;
+    }
 
+    const handleGuess = (guessId, guessLabel) => {
         setGame(currentGameState => {
             let updatedGameState = {
                 ...currentGameState,
@@ -77,19 +80,24 @@ function Game({ gameId, onChangeView, onGameOver }) {
     const fetchGameInfo = async () => {
         setLoading(true);
         getGameInfo(gameId).then((response => {
-            const data = response.items[0].fields;
-            setGameInfo({
-                plantId: data.id,
-                photos: data.photos && data.photos.map(photo => {
-                    return {
-                        src: photo.fields.file.url,
-                        caption: photo.fields.title
-                    }
-                }),
-                hint: documentToHtmlString(data.hint),
-                dykfact: documentToHtmlString(data.didYouKnow),
-                dyksrc: data.didYouKnowSrc
-            });
+            try {
+                const data = response.items[0].fields;
+                setGameInfo({
+                    plantId: data.id,
+                    photos: data.photos && data.photos.map(photo => {
+                        return {
+                            src: photo.fields.file.url,
+                            caption: photo.fields.title
+                        }
+                    }),
+                    hint: documentToHtmlString(data.hint),
+                    dykfact: documentToHtmlString(data.didYouKnow),
+                    dyksrc: data.didYouKnowSrc
+                });
+            } catch (e) {
+                console.log('Error retrieving game data');
+                console.log('Error details: ', e);
+            }
         }));
         setLoading(false);
     }
