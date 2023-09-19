@@ -6,7 +6,7 @@ import Guess from './Guess/Guess.jsx';
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer';
 
 function Game({ gameId, onChangeView, onGameOver }) {
-    const totalGuessesAllowed = 4;
+    const totalGuessesAllowed = 3;
 
     const [isLoading, setLoading] = useState(false);
     const [gameInfo, setGameInfo] = useState({});
@@ -90,7 +90,7 @@ function Game({ gameId, onChangeView, onGameOver }) {
                             caption: photo.fields.title
                         }
                     }),
-                    hint: documentToHtmlString(data.hint),
+                    hint: data.hint,
                     dykfact: documentToHtmlString(data.didYouKnow),
                     dyksrc: data.didYouKnowSrc
                 });
@@ -161,8 +161,8 @@ function Game({ gameId, onChangeView, onGameOver }) {
                     </div>
                 }
                 {game.status === 'finished' && gameInfo.dykfact &&
-                    <div className="mt-6 text-xs text-center">
-                        <div className="flex justify-center gap-1">
+                    <div className="mt-4 border-t-2 pt-1 text-xs">
+                        <div className="flex gap-1">
                             <h3 className="tracking-tight font-extrabold text-slate-900">
                                 Did You Know
                             </h3>

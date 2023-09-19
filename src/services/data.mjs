@@ -13,6 +13,7 @@ const getClient = () => {
 const getAll = async () => {
     return getClient().getEntries({
         content_type: 'plant',
+        order: 'fields.commonName',
         select: 'fields.id, fields.commonName,fields.scientificNames,fields.commonAliases'
     });
 };

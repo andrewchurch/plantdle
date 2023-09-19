@@ -50,6 +50,10 @@ function Guesser({ gameId, onGuess }) {
         <form onSubmit={handleGuessSubmission} className="flex gap-2 mt-2">
             <AsyncSelect
                 cacheOptions
+                className="w-full"
+                classNames={{
+                    menu: () => 'w-full text-xs',
+                }}
                 components={{ LoadingIndicator: null }}
                 defaultOptions
                 filterOption={customFilter}
@@ -61,7 +65,6 @@ function Guesser({ gameId, onGuess }) {
                 placeholder="Search and select from list"
                 ref={inputRef}
                 required
-                className="text-base w-full"
             />
             <button className="bg-forest-800 shadow-sm rounded-md px-2 font-semibold text-white tracking-tight text-sm">Submit</button>
         </form>
