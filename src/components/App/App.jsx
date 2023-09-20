@@ -39,7 +39,7 @@ function App() {
     };
 
     const getGameId = () => {
-        const msFromStartDay = Date.now() - new Date(2023, 8, 18);
+        const msFromStartDay = Date.now() - new Date(2023, 8, 17);
         return Math.floor(msFromStartDay / (24 * 60 * 60 * 1000));
     };
 

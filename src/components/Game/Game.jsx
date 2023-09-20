@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { getGameInfo } from '../../services/data.mjs';
 import Clues from './Clues/Clues.jsx';
 import Guesser from './Guesser/Guesser.jsx';
 import Guess from './Guess/Guess.jsx';
+import { getGameInfo } from '../../services/data.mjs';
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer';
 
 function Game({ gameId, onChangeView, onGameOver }) {
@@ -79,12 +79,10 @@ function Game({ gameId, onChangeView, onGameOver }) {
                 const data = response.items[0].fields;
                 setGameInfo({
                     plantId: data.id,
-                    photos: data.photos && data.photos.map(photo => {
-                        return {
-                            src: photo.fields.file.url,
-                            caption: photo.fields.title
-                        }
-                    }),
+                    photos: data.photos?.map(photo => ({
+                        src: `${photo.fields.file.url}?fm=webp&w=900&h=600`,
+                        caption: photo.fields.title
+                    })),
                     hint: data.hint,
                     dykfact: documentToHtmlString(data.didYouKnow),
                     dyksrc: data.didYouKnowSrc
