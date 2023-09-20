@@ -53,7 +53,7 @@ function App() {
     };
 
     return (
-        <div className="h-screen px-2 md:p-4 mx-auto max-w-5xl grid grid-rows-[min-content,auto,min-content]">
+        <div className="h-screen px-2 mx-auto max-w-lg grid grid-rows-[min-content,auto,min-content] md:h-auto md:p-4">
             <Header view={view} onChangeView={setView} />
             <div className="bg-white text-slate-700">
                 {mainViewComponents[view]}

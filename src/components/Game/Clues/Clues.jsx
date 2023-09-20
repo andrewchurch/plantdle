@@ -23,20 +23,20 @@ function Clues({ game, gameInfo, onClueChange }) {
 
     return (
         <div className="">
-            <div className="aspect-video relative">
+            <div className="aspect-[3/2] relative">
                 <div className="overflow-hidden absolute top-0 left-0 h-full">
                     <img className="object-cover" src={activePhoto.src} />
                 </div>
                 {game.status === 'finished' &&
-                    <p className="absolute top-full right-0 pt-1 px-2 text-xs text-slate-500">{activePhoto.caption}</p>
+                    <p className="absolute top-full right-0 pt-1 px-2 text-xs text-slate-500 md:px-4">{activePhoto.caption}</p>
                 }
                 {(game.status === 'finished' || isHintActive) && 
-                    <p className="absolute bottom-0 bg-gray-200 w-full text-xs px-2 py-1">
+                    <p className="absolute bottom-0 bg-gray-200 w-full text-xs px-2 py-1 md:px-4">
                         Hint: {gameInfo.hint}
                     </p>
                 }
             </div>
-            <div className="flex pl-2 gap-2 border-t-2">
+            <div className="flex pl-4 gap-2 border-t-2">
                 {clueChangers}
             </div>
         </div>

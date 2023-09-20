@@ -3,19 +3,18 @@ import CountUp from 'react-countup';
 function Stats({ player, onChangeView }) {
 
     return (
-        <div className="flex h-full">
+        <div className="flex h-full py-8">
             <div className="m-auto text-center text-slate-900">
                 <div className="px-8 py-6 bg-gray-200">
-                <CountUp
+                    <CountUp
                         className="text-5xl tracking-tight font-light"
                         duration={3}
                         end={player.wins}
                     />
                     <h2 className="text-lg tracking-tight font-extrabold">Total Wins</h2>
-
                 </div>
                 <div className="mt-4 px-8 py-6 bg-gray-200">
-                <CountUp
+                    <CountUp
                         className="text-5xl tracking-tight font-light"
                         duration={3}
                         end={player.streak}

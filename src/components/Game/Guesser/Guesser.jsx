@@ -47,7 +47,7 @@ function Guesser({ gameId, onGuess }) {
     };
 
     return (
-        <form onSubmit={handleGuessSubmission} className="flex gap-2 mt-2">
+        <form onSubmit={handleGuessSubmission} className="flex gap-2 mt-2 mb-2">
             <AsyncSelect
                 cacheOptions
                 className="w-full"
