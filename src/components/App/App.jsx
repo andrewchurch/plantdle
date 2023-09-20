@@ -39,6 +39,11 @@ function App() {
     };
 
     const getGameId = () => {
+
+        if (import.meta.env.VITE_GAME_ID) {
+            return import.meta.env.VITE_GAME_ID;
+        }
+
         const msFromStartDay = Date.now() - new Date('September 20, 2023');
         const daysSinceStart = Math.floor(msFromStartDay / (24 * 60 * 60 * 1000));
 
