@@ -39,11 +39,11 @@ function App() {
     };
 
     const getGameId = () => {
-        const msFromStartDay = Date.now() - new Date(import.meta.env.VITE_START_DATE);
+        const msFromStartDay = Date.now() - new Date('September 20, 2023');
         const daysSinceStart = Math.floor(msFromStartDay / (24 * 60 * 60 * 1000));
 
         // use mod of total games so we start over after the last game 
-        return (daysSinceStart % import.meta.env.VITE_TOTAL_GAMES) + 1;
+        return (daysSinceStart % 72) + 1;
     };
 
     useEffect(() => {
