@@ -44,7 +44,7 @@ function App() {
             return import.meta.env.VITE_GAME_ID;
         }
 
-        const msFromStartDay = Date.now() - new Date('September 20, 2023');
+        const msFromStartDay = Date.now() - new Date('September 21, 2023');
         const daysSinceStart = Math.floor(msFromStartDay / (24 * 60 * 60 * 1000));
 
         // use mod of total games so we start over after the last game 
