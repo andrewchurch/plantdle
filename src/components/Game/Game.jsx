@@ -149,7 +149,9 @@ function Game({ gameId, onChangeView, onGameOver }) {
                     </div>
                 }
             </div>
-            <button className="absolute bottom-0 right-2 text-xs text-white bg-black p-2" onClick={() => setGame(defaultGameState)}>Reset Game</button>
+            {import.meta.env.DEV && 
+                <button className="absolute bottom-0 right-2 text-xs text-white bg-black p-2" onClick={() => setGame(defaultGameState)}>Reset Game</button>
+            }
         </>
     )
 }
