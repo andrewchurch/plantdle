@@ -23,7 +23,6 @@ function Game({ gameId, onChangeView, onGameOver }) {
         setGame(defaultGameState);
     }
     if (import.meta.env.VITE_GAME_VERSION && game.versionId !== import.meta.env.VITE_GAME_VERSION) {
-        console.log('resetting game because version mismatch');
         setGame(defaultGameState);
     }
 
