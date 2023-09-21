@@ -8,7 +8,7 @@ import { documentToHtmlString } from '@contentful/rich-text-html-renderer';
 function Game({ gameId, onChangeView, onGameOver }) {
     const totalGuessesAllowed = 3;
     
-    const [gameInfo, setGameInfo] = useState({});
+    const [gameInfo, setGameInfo] = useState(JSON.parse(localStorage.getItem('gameInfo')) || {});
 
     const defaultGameState = {
         activeClue: 0,
@@ -78,6 +78,7 @@ function Game({ gameId, onChangeView, onGameOver }) {
             try {
                 const data = response.items[0].fields;
                 setGameInfo({
+                    gameId: gameId,
                     plantId: data.id,
                     photos: data.photos?.map(photo => ({
                         src: `${photo.fields.file.url}?fm=webp&w=900&h=600`,
@@ -95,12 +96,18 @@ function Game({ gameId, onChangeView, onGameOver }) {
     }
 
     useEffect(() => {
-        fetchGameInfo();
+        if (gameInfo?.gameId !== gameId) {
+            fetchGameInfo();
+        }
     }, []);
 
     useEffect(() => {
         localStorage.setItem('game', JSON.stringify(game));
     }, [game]);
+
+    useEffect(() => {
+        localStorage.setItem('gameInfo', JSON.stringify(gameInfo));
+    }, [gameInfo]);
 
     return (
         <>
@@ -124,7 +131,7 @@ function Game({ gameId, onChangeView, onGameOver }) {
                         </button>
                     </div>
                 }
-                {game.status !== 'finished' && <Guesser gameId={1} onGuess={handleGuess} />}
+                {game.status !== 'finished' && <Guesser gameId={gameId} onGuess={handleGuess} />}
                 {game.guesses && 
                     <div>
                         {game.guesses.map((guess, i) => <Guess key={i} guessData={guess} />)}

@@ -1,15 +1,15 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import AsyncSelect from 'react-select/async';
 import { getAll } from '../../../services/data.mjs';
 
 function Guesser({ gameId, onGuess }) {
     const [selectedGuess, setSelectedGuess] = useState(null);
-    const [allOptions, setAllOptions] = useState([]);
+    const [guesserOptions, setGuesserOptions] = useState(JSON.parse(localStorage.getItem('guesserOptions')) || {});
     const inputRef = useRef();
 
     const loadOptions = (input, callback) => {
-        if (allOptions.length) {
-            callback(allOptions);
+        if (guesserOptions.gameId === gameId && guesserOptions.options?.length) {
+            callback(guesserOptions.options);
         } else {
             getAll().then((response => {
                 let options = [];
@@ -17,7 +17,10 @@ function Guesser({ gameId, onGuess }) {
                     options.push({ ...item.fields });
                 });
                 callback(options);
-                setAllOptions(options);
+                setGuesserOptions({
+                    gameId: gameId,
+                    options: options
+                });
             }));
         }
     };
@@ -45,6 +48,10 @@ function Guesser({ gameId, onGuess }) {
         inputRef.current.clearValue();
         onGuess(selectedGuess.id, getNameOutput(selectedGuess));
     };
+
+    useEffect(() => {
+        localStorage.setItem('guesserOptions', JSON.stringify(guesserOptions));
+    }, [guesserOptions]);
 
     return (
         <form onSubmit={handleGuessSubmission} className="flex gap-2 mt-2 mb-2">
