@@ -13,12 +13,17 @@ function Game({ gameId, onChangeView, onGameOver }) {
     const defaultGameState = {
         activeClue: 0,
         gameId: gameId,
+        versionId: import.meta.env.VITE_GAME_VERSION,
         guesses: [],
         outcome: null,
         status: null
     };
     const [game, setGame] = useState(JSON.parse(localStorage.getItem('game')) || defaultGameState);
     if (game.gameId !== gameId) {
+        setGame(defaultGameState);
+    }
+    if (import.meta.env.VITE_GAME_VERSION && game.versionId !== import.meta.env.VITE_GAME_VERSION) {
+        console.log('resetting game because version mismatch');
         setGame(defaultGameState);
     }
 
@@ -33,16 +38,16 @@ function Game({ gameId, onChangeView, onGameOver }) {
         return guessId === gameInfo.plantId;
     }
 
-    const handleGuess = (guessId, guessLabel) => {
+    const handleGuess = (guess) => {
         setGame(currentGameState => {
             let updatedGameState = {
                 ...currentGameState,
                 guesses: [...currentGameState.guesses]
             };
 
-            const isCorrectGuess = checkGuess(guessId);
+            const isCorrectGuess = checkGuess(guess.id);
             updatedGameState.guesses.unshift({
-                guess: guessLabel,
+                ...guess,
                 outcome: isCorrectGuess ? 'success' : 'failure'
             });
 
@@ -80,6 +85,9 @@ function Game({ gameId, onChangeView, onGameOver }) {
                 setGameInfo({
                     gameId: gameId,
                     plantId: data.id,
+                    commonName: data.commonName,
+                    scientificNames: data.scientificNames,
+                    commonAliases: data.commonAliases,
                     photos: data.photos?.map(photo => ({
                         src: `${photo.fields.file.url}?fm=webp&w=900&h=600`,
                         caption: photo.fields.title
@@ -96,7 +104,7 @@ function Game({ gameId, onChangeView, onGameOver }) {
     }
 
     useEffect(() => {
-        if (gameInfo?.gameId !== gameId) {
+        if (gameInfo.gameId !== gameId) {
             fetchGameInfo();
         }
     }, []);
@@ -113,27 +121,33 @@ function Game({ gameId, onChangeView, onGameOver }) {
         <>
             {gameInfo.photos && <Clues game={game} gameInfo={gameInfo} onClueChange={setActiveClue} />}
             <div className="p-2 md:p-4">
-                {game.status === 'finished' &&
-                    <div className="flex gap-2 justify-center mt-2 mb-4">
-                        <h2 className="text-xl tracking-tight font-extrabold text-slate-900">
-                            {game.outcome === 'success' 
-                                ? <span className="text-green-600">Correct! Great Job!</span>
-                                : <span className="text-red-600">Fail. Ugh.</span>
-                            }
-                        </h2>
-                        <button
-                            onClick={() => onChangeView('stats')}
-                            className={`bg-${game.outcome === 'success' ? 'green' : 'red'}-600 flex gap-1 items-center shadow-sm rounded-md px-2 py-1 text-xs text-white tracking-tight font-semibold`}>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.0} stroke="currentColor" className="w-4 h-4">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
-                            </svg>
-                            See Stats
-                        </button>
-                    </div>
-                }
                 {game.status !== 'finished' && <Guesser gameId={gameId} onGuess={handleGuess} />}
-                {game.guesses && 
+                {game.status === 'finished' && game.outcome === 'failure' && 
+                    <>
+                        <h3 className="tracking-tight font-extrabold text-xs text-slate-900">
+                            Incorrect! The correct answer was:
+                        </h3>
+                        <Guess guessData={{
+                            id: gameInfo.plantId,
+                            commonName: gameInfo.commonName,
+                            scientificNames: gameInfo.scientificNames,
+                            commonAliases: gameInfo.commonAliases,
+                            outcome: null
+                        }} />
+                    </>
+                }
+                {game.guesses &&
                     <div>
+                        {game.outcome === 'failure' &&
+                            <h3 className="mt-2 tracking-tight font-extrabold text-xs text-slate-900">
+                                Your Guesses
+                            </h3>
+                        }
+                        {game.outcome === 'success' && 
+                            <h3 className="mt-2 tracking-tight font-extrabold text-xs text-slate-900">
+                                Correct! Way to go!
+                            </h3>
+                        }
                         {game.guesses.map((guess, i) => <Guess key={i} guessData={guess} />)}
                     </div>
                 }
@@ -145,7 +159,7 @@ function Game({ gameId, onChangeView, onGameOver }) {
                     </div>
                 }
                 {gameInfo.dykfact && game.status === 'finished' &&
-                    <div className="border-t-2 mt-1 pt-1 text-xs">
+                    <div className="border-t-2 mt-2 pt-2 text-xs">
                         <div className="flex gap-1">
                             <h3 className="tracking-tight font-extrabold text-slate-900">
                                 Did You Know

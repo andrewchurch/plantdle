@@ -46,7 +46,7 @@ function Guesser({ gameId, onGuess }) {
     const handleGuessSubmission = (event) => {
         event.preventDefault();
         inputRef.current.clearValue();
-        onGuess(selectedGuess.id, getNameOutput(selectedGuess));
+        onGuess(selectedGuess);
     };
 
     useEffect(() => {

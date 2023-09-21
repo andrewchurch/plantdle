@@ -1,13 +1,19 @@
 function Guess({ guessData }) {
-
-    const indicatorClass = guessData.outcome === 'success' ? 'bg-green-600' : 'bg-red-600';
+    const indicatorClass = 
+        guessData.outcome === 'success' ? 'bg-green-600' : 
+        guessData.outcome === 'failure' ? 'bg-red-600' :
+        'bg-gray-600';
 
     return (
-        <div className="flex gap-2 bg-gray-200 p-2 mt-1 items-center first:mt-0">
-            <span className={`${indicatorClass} w-5 h-5`}>
-                <span className="sr-only">{guessData.outcome}</span>
-            </span>
-            <span className="text-xs">{guessData.guess}</span>
+        <div className={`${indicatorClass} py-1 px-2 pb-2 mt-1 text-white`}>
+            <span className="text-sm font-semibold">{guessData.commonName}</span>
+            <span className="text-xs">&nbsp;({guessData.scientificNames?.join(', ')})</span>
+            {guessData.commonAliases && guessData.outcome !== 'failure' &&  
+                <span className="flex gap-1 border-t-2 mt-1 pt-1 font-normal text-xs"> 
+                    <span>a.k.a.</span> 
+                    <span>{guessData.commonAliases.join(', ')}</span>
+                </span>
+            }
         </div>
     );
 }
