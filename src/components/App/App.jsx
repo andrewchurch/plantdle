@@ -28,6 +28,8 @@ function App() {
                     if (currentPlayerState.lastWin === `${date.getMonth() + 1}/${date.getDate()}`) {
                         streak = currentPlayerState.streak + 1;
                     }
+                } else {
+                    streak = 1;
                 }
             }
             return {
