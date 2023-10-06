@@ -5,11 +5,13 @@ function Guess({ guessData }) {
         'bg-gray-600';
 
     return (
-        <div className={`${indicatorClass} py-1 px-2 pb-2 mt-1 text-white`}>
-            <span className="text-sm font-semibold">{guessData.commonName}</span>
-            <span className="text-xs">&nbsp;({guessData.scientificNames?.join(', ')})</span>
+        <div className={`${indicatorClass} py-2 px-2 mt-1 text-white`}>
+            <h4 className="leading-none">
+                <span className="text-sm font-semibold">{guessData.commonName}</span>
+                <span className="text-xs">&nbsp;({guessData.scientificNames?.join(', ')})</span>
+            </h4>
             {guessData.commonAliases && guessData.outcome !== 'failure' &&  
-                <span className="flex gap-1 border-t-2 mt-1 pt-1 font-normal text-xs"> 
+                <span className="flex gap-1 border-t mt-1 pt-1 font-normal text-xs"> 
                     <span>a.k.a.</span> 
                     <span>{guessData.commonAliases.join(', ')}</span>
                 </span>
