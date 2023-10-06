@@ -22,10 +22,7 @@ function App() {
             let winDate = null;
 
             // gamesPlayed was added after game started, so make sure current players get gamesPlayed at least equal to wins
-            let gamesPlayed = currentPlayerState.gamesPlayed;
-            if (!currentPlayerState.gamesPlayed || currentPlayerState.gamesPlayed < wins) {
-                gamesPlayed = wins;
-            }
+            let gamesPlayed = currentPlayerState.gamesPlayed ? currentPlayerState.gamesPlayed : wins;
             gamesPlayed++;
 
             if (outcome === 'success') {
