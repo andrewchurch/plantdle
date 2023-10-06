@@ -8,6 +8,7 @@ function App() {
     const [view, setView] = useState('game');
 
     const defaultPlayerState = {
+        gamesPlayed: 0,
         lastWin: null,
         streak: 0,
         wins: 0
@@ -19,6 +20,14 @@ function App() {
             let wins = currentPlayerState.wins;
             let streak = 0;
             let winDate = null;
+
+            // gamesPlayed was added after game started, so make sure current players get gamesPlayed at least equal to wins
+            let gamesPlayed = currentPlayerState.gamesPlayed;
+            if (!currentPlayerState.gamesPlayed || currentPlayerState.gamesPlayed < wins) {
+                gamesPlayed = wins;
+            }
+            gamesPlayed++;
+
             if (outcome === 'success') {
                 wins++;
                 const date = new Date();
@@ -33,6 +42,7 @@ function App() {
                 }
             }
             return {
+                gamesPlayed: gamesPlayed,
                 lastWin: winDate,
                 wins: wins,
                 streak: streak
