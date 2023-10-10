@@ -89,7 +89,8 @@ function Game({ gameId, onChangeView, onGameOver }) {
                     commonAliases: data.commonAliases,
                     photos: data.photos?.map(photo => ({
                         src: `${photo.fields.file.url}?fm=webp&w=900&h=600`,
-                        caption: photo.fields.title
+                        caption: photo.fields.title,
+                        description: photo.fields.description
                     })),
                     hint: data.hint,
                     dykfact: documentToHtmlString(data.didYouKnow),

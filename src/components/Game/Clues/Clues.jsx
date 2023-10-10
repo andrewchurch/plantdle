@@ -10,6 +10,15 @@ function ClueChanger({ thisClue, activeClue, onClueChange }) {
     )
 }
 
+const isValidUrl = (text) => {
+    try {
+        new URL(text);
+        return true;
+    } catch {
+        return false;
+    }
+}
+
 function Clues({ game, gameInfo, onClueChange }) {
     const currentNumberOfGuesses = game.guesses.length;
     const activeClueIndex = game.activeClue;
@@ -28,7 +37,12 @@ function Clues({ game, gameInfo, onClueChange }) {
                     <img className="object-cover" src={activePhoto.src} />
                 </div>
                 {game.status === 'finished' &&
-                    <p className="absolute top-full right-0 pt-1 px-2 text-xs text-slate-500 md:px-4">{activePhoto.caption}</p>
+                    <p className="absolute top-full right-0 pt-1 px-2 text-xs text-slate-500 md:px-4">
+                        <span>{activePhoto.caption}</span>
+                        {activePhoto.description && isValidUrl(activePhoto.description) && <>
+                            &nbsp;<span>(<a href={activePhoto.description} className="text-forest-800 after:content-['_↗']">src</a>)</span>
+                        </>}
+                    </p>
                 }
                 {(game.status === 'finished' || isHintActive) && 
                     <p className="absolute bottom-0 bg-gray-200 w-full text-xs px-2 py-1 md:px-4">
